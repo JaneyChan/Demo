@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+
+	<!-- <constant name="struts.action.extension" value="action" /> -->
+	<!-- Configuration development mode -->
+	<constant name="struts.devMode" value="true" />
+	<!-- Dynamic method invocation -->
+	<constant name="struts.enable.DynamicMethodInvocation" value="true" />
+	<!-- Static method  invocation -->
+	<constant name="struts.ognl.allowStaticMethodAccess" value="true" />
+	<!-- 将action托管给spring3.0管理 -->  
+    <constant name="struts.objectFactory" value="spring"></constant>
+    <!-- 设置 struts  默认上传文件大小-->
+    <constant name= "struts.multipart.maxSize" value="104857600" />
+    <!-- 指定国际化资源文件的baseName为messageResource -->
+ 	<constant name="struts.custom.i18n.resources" value="messageResource"/>
+
+	<!-- 设置该应用使用的解码集 -->
+	<constant name="struts.i18n.encoding" value="utf-8"/>
+    <!-- <constant name="struts.multipart.saveDir" value="D:/test"></constant> -->
+    <package name="package" namespace="" extends="struts-default,json-default">
+	
+		<result-types>
+			<result-type name="json" class="org.apache.struts2.json.JSONResult" />
+		</result-types>
+		
+		<!-- Define global result -->
+		<global-results>
+
+			<result name="success">index.jsp</result>
+			<result name="input">login.jsp</result>
+			
+		</global-results>
+		
+		<action name="Upload_*" class="com.blog.action.UploadAction">
+			<!-- 限制图片的格式和图片的大小 -->
+			<interceptor-ref name="fileUpload">
+			<param name="allowedTypes">
+				image/bmp,image/png,image/gif,image/jpeg,image/jpg
+			</param>
+			<param name="maximumSize">1024000</param>
+			</interceptor-ref>
+			
+			<!-- 默认的拦截器，必须要写 -->
+			<interceptor-ref name="defaultStack" />
+			<param name="savePath">/upload</param> 
+			<result name="success">/album/photo.jsp</result>
+			<result name="fail">/index.jsp</result>
+		</action>
+		
+		<action name="Admin_*" class="com.blog.action.AdminAction" method="{1}">
+			<result name="index">/admin/index.jsp</result>
+			<result name="findSucc">/admin/updateInfo.jsp</result>
+			<result name="show">/aboutme.jsp</result>
+			<result name="login">/login.jsp</result>
+		</action>
+		
+		<action name="Modify_*" class="com.blog.action.ModifyAction" method="{1}">
+			<result name="index">/admin/index.jsp</result>
+			<result name="modifyPwdFail">/admin/modifyPwd.jsp</result>
+			<result name="input">/admin/modifyPwd.jsp</result>
+		</action>
+		
+		<!-- 后台相册管理 -->
+		<action name="Album_*" class="com.blog.action.AlbumAction" method="{1}">
+			<result name="addAlbumSucc">/album/album.jsp</result>
+			<!-- 跳转到相册列表页面 -->
+			<result name="listAlbum">/album/album.jsp</result>
+			<result name="findAlbumSucc">/album/modifyAlbum.jsp</result>
+		</action>
+		
+		<!-- 照片管理 -->
+		<action name="Photo_*" class="com.blog.action.PhotoAction" method="{1}">
+			<result name="allPhotos">/album/photo.jsp</result>
+			<result name="listPhoto">/photo.jsp</result>
+		</action>
+		
+		<!-- 后台登录管理 -->
+		<action name="Login_*" class="com.blog.action.LoginAction" method="{1}">
+			<result name="success">/admin/index.jsp</result>
+		</action>
+		
+		<!-- 后台文章管理 -->
+		<action name="Article_*" class="com.blog.action.ArticleAction" method="{1}">
+			<!-- 跳转到文章列表页面 -->
+			<result name="allArticle">/article/allArticle.jsp</result>
+			<!-- 查找某篇文章 -->
+			<result name="findArticleSucc">/article/updateArticle.jsp</result>
+			<!-- 显示文章 -->
+			<result name="showArticle">article.jsp</result>
+		</action>
+		
+		<!-- 后台文章分类管理 -->
+		<action name="Category_*" class="com.blog.action.CategoryAction" method="{1}">
+			<!-- 分类列表 -->
+			<result name="listCate">/category/category.jsp</result> 
+			<!-- 查找分类 -->
+			<result name="findCateSucc">/category/modifyCate.jsp</result>
+		</action>
+		
+		<!-- 后台评论管理 -->	
+		<action name="Comment_*" class="com.blog.action.CommentAction" method="{1}">	
+			<!-- 删除评论 -->
+			<result name="deleCommentSucc">/comment/comment.jsp</result>
+			<!-- 添加评论 -->
+			<result name="addCommSucc">index.jsp</result>
+		</action>
+		
+		<!-- 后台留言管理 -->
+		<action name="Board_*" class="com.blog.action.BoardAction" method="{1}">	
+			<!-- 删除留言 -->
+			<result name="delBoardSucc">/board/board.jsp</result>
+			<!-- 添加留言 -->
+			<result name="addBoardSucc">board.jsp</result>
+		</action>
+		
+	</package>
+</struts>    
